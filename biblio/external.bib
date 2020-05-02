@@ -787,8 +787,6 @@ doi = {10.1007/s10827-007-0054-6}
         }
 }
 
-%Harlow, F. H., "The Particle-in-Cell Method for Numerical Solution of Problems in Fluid Dynamics," Proc. Symp. Applied Mathematics 15, 269 (1963)
-
 @InProceedings{Harlow1963,
  title = {The Particle-in-Cell Method for Numerical Solution of Problems in Fluid Dynamics},
  booktitle = {Proc. Symp. Applied Mathematics},
@@ -812,10 +810,18 @@ doi = {10.1007/s10827-007-0054-6}
   language                 = {russian}
 }
 
+@Book{Sedov1970,
+  title                    = {Механика сплошной среды.},
+  author                   = {Седов Л.И.},
+  year                     = {1970},
+  numpages                 = {1060},
+  language                 = {russian}
+}
+
 @article{Gingold1977,
        author = {{Gingold}, R.~A. and {Monaghan}, J.~J.},
-        title = "{Smoothed particle hydrodynamics: theory and application to non-spherical stars.}",
-      journal = {\mnras},
+        title = {Smoothed particle hydrodynamics: theory and application to non-spherical stars.},
+      journal = {Monthly Notices of the Royal Astronomical Society},
      keywords = {Hydrodynamics, Particle Theory, Stellar Models, Astrophysics, Stellar Rotation, Stellar Structure, Astrophysics},
          year = 1977,
         month = nov,
@@ -828,8 +834,8 @@ doi = {10.1007/s10827-007-0054-6}
 
 @article{Lucy1977,
        author = {{Lucy}, L.~B.},
-        title = "{A numerical approach to the testing of the fission hypothesis.}",
-      journal = {\aj},
+        title = {A numerical approach to the testing of the fission hypothesis.},
+      journal = {Astronomical Journal},
      keywords = {Binary Stars, Hypotheses, Nuclear Fission, Numerical Analysis, Protostars, Stellar Evolution, Astronomical Models, Difference Equations, Gas Dynamics, Monte Carlo Method, Numerical Stability, Particle Motion, Stellar Rotation, Astrophysics},
          year = 1977,
         month = dec,
@@ -840,6 +846,84 @@ doi = {10.1007/s10827-007-0054-6}
       adsnote = {Provided by the SAO/NASA Astrophysics Data System}
 }
 
+@InProceedings{Müller2003,
+  author = {Müller, Matthias and Charypar, David and Gross, Markus},
+  year = {2003},
+  month = {07},
+  pages = {154-159},
+  title = {Particle-Based Fluid Simulation for Interactive Applications},
+  volume = {2003},
+  isbn = {1581136595},
+  journal = {Fluid Dynamics}
+}
+
+@InProceedings{Müller2005,
+author = {Müller, Matthias and Solenthaler, Barbara and Keiser, Richard and Gross, Markus},
+year = {2005},
+month = {01},
+pages = {237-244},
+title = {Particle-Based Fluid-Fluid Interaction},
+journal = {Proceedings of the 2005 ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+doi = {10.1145/1073368.1073402}
+}
+
+@InProceedings{Keiser2005,
+  author = {Keiser, Richard and Adams, Bart and Gasser, Dominique and Bazzi, Paolo and Dutr\'{e}, Philip and Gross, Markus},
+  title = {A Unified Lagrangian Approach to Solid-Fluid Animation},
+  year = {2005},
+  isbn = {3905673207},
+  publisher = {Eurographics Association},
+  address = {Goslar, DEU},
+  booktitle = {Proceedings of the Second Eurographics / IEEE VGTC Conference on Point-Based Graphics},
+  pages = {125–133},
+  numpages = {9},
+  location = {New York, USA},
+  series = {SPBG’05}
+}
+
+@article{Solenthaler2007,
+author = {Solenthaler, Barbara and Schläfli, Jürg and Pajarola, Renato},
+title = {A unified particle model for fluid–solid interactions},
+journal = {Computer Animation and Virtual Worlds},
+volume = {18},
+number = {1},
+pages = {69-82},
+keywords = {physically based simulation, smoothed particle hydrodynamics, fluids, solids, melting, solidification},
+doi = {10.1002/cav.162},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1002/cav.162},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/cav.162},
+abstract = {Abstract We present a new method for the simulation of melting and solidification in a unified particle model. Our technique uses the Smoothed Particle Hydrodynamics (SPH) method for the simulation of liquids, deformable as well as rigid objects, which eliminates the need to define an interface for coupling different models. Using this approach, it is possible to simulate fluids and solids by only changing the attribute values of the underlying particles. We significantly changed a prior elastic particle model to achieve a flexible model for melting and solidification. By using an SPH approach and considering a new definition of a local reference shape, the simulation of merging and splitting of different objects, as may be caused by phase change processes, is made possible. In order to keep the system stable even in regions represented by a sparse set of particles we use a special kernel function for solidification processes. Additionally, we propose a surface reconstruction technique based on considering the movement of the center of mass to reduce rendering errors in concave regions. The results demonstrate new interaction effects concerning the melting and solidification of material, even while being surrounded by liquids. Copyright © 2007 John Wiley \& Sons, Ltd.},
+year = {2007}
+}
+
+@InProceedings{Solenthaler2008,
+author = {Solenthaler, B. and Pajarola, R.},
+title = {Density Contrast SPH Interfaces},
+year = {2008},
+isbn = {9783905674101},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+booktitle = {Proceedings of the 2008 ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+pages = {211–218},
+numpages = {8},
+location = {Dublin, Ireland},
+series = {SCA ’08}
+}
+  
+@InProceedings{Becker2007,
+author = {Becker, Markus and Teschner, Matthias},
+title = {Weakly Compressible SPH for Free Surface Flows},
+year = {2007},
+isbn = {9781595936240},
+publisher = {Eurographics Association},
+address = {Goslar, DEU},
+booktitle = {Proceedings of the 2007 ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+pages = {209–217},
+numpages = {9},
+keywords = {smoothed particle hydrodynamics, Tait equation, physically-based simulation, surface tension, volume preservation, fluid dynamics},
+location = {San Diego, California},
+series = {SCA ’07}
+}
 
 
 % from urlbst package
