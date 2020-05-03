@@ -926,6 +926,130 @@ series = {SCA ’07}
 }
 
 
+@article{Desbrun1996,
+author = {Desbrun, Mathieu and Tsingos, Nicolas and Gascuel, Marie-Paule},
+title = {Adaptive Sampling of Implicit Surfaces for Interactive Modelling and Animation},
+journal = {Computer Graphics Forum},
+volume = {15},
+number = {5},
+pages = {319-325},
+keywords = {Implicit surfaces, sampling, interactive visualization},
+doi = {10.1111/1467-8659.1550319},
+url = {https://onlinelibrary.wiley.com/doi/abs/10.1111/1467-8659.1550319},
+eprint = {https://onlinelibrary.wiley.com/doi/pdf/10.1111/1467-8659.1550319},
+abstract = {Abstract This paper presents a new adaptive sampling method for implicit surfaces that can be used in both interactive modelling and animation. The algorithm samples implicit objects composed of blending primitives and efficiently maintains this sampling over time, even when their topology changes (during fractures and fusions). It provides two complementary modes of immediate visualization: displaying “scales” lying on the surface, or a “primitive-wise” polygonization. The sampling method efficiently avoids unwanted blending between different parts of an object. Moreover, it can be used for partitioning an implicit surface into local bounding boxes that will accelerate collision detection during animation and ray-intersections during final rendering.},
+year = {1996}
+}
+
+@InProceedings{Becker2007,
+  author = {Becker, Markus and Teschner, Matthias},
+  title = {Weakly Compressible SPH for Free Surface Flows},
+  year = {2007},
+  isbn = {9781595936240},
+  publisher = {Eurographics Association},
+  address = {Goslar, DEU},
+  booktitle = {Proceedings of the 2007 ACM SIGGRAPH/Eurographics Symposium on Computer Animation},
+  pages = {209–217},
+  numpages = {9},
+  keywords = {physically-based simulation, volume preservation, surface tension, fluid dynamics, smoothed particle hydrodynamics, Tait equation},
+  location = {San Diego, California},
+  series = {SCA ’07}
+}
+  
+@article{Shao2003,
+  author = {Shao, Songdong and Lo, Edmond},
+  year = {2003},
+  month = {07},
+  pages = {787-800},
+  title = {Incompressible SPH Method for Simulating Newtonian and Non-Newtonian Fows with a Free Surface},
+  volume = {26},
+  journal = {Advances in Water Resources},
+  doi = {10.1016/S0309-1708(03)00030-7}
+}
+
+@article{CUMMINS1999584,
+title = "An SPH Projection Method",
+journal = "Journal of Computational Physics",
+volume = "152",
+number = "2",
+pages = "584 - 607",
+year = "1999",
+issn = "0021-9991",
+doi = "https://doi.org/10.1006/jcph.1999.6246",
+url = "http://www.sciencedirect.com/science/article/pii/S0021999199962460",
+author = "Sharen J Cummins and Murray Rudman",
+abstract = "A new formulation is introduced for enforcing incompressibility in Smoothed Particle Hydrodynamics (SPH). The method uses a fractional step with the velocity field integrated forward in time without enforcing incompressibility. The resulting intermediate velocity field is then projected onto a divergence-free space by solving a pressure Poisson equation derived from an approximate pressure projection. Unlike earlier approaches used to simulate incompressible flows with SPH, the pressure is not a thermodynamic variable and the Courant condition is based only on fluid velocities and not on the speed of sound. Although larger time-steps can be used, the solution of the resulting elliptic pressure Poisson equation increases the total work per time-step. Efficiency comparisons show that the projection method has a significant potential to reduce the overall computational expense compared to weakly compressible SPH, particularly as the Reynolds number, Re, is increased. Simulations using this SPH projection technique show good agreement with finite-difference solutions for a vortex spin-down and Rayleigh–Taylor instability. The results, however, indicate that the use of an approximate projection to enforce incompressibility leads to error accumulation in the density field."
+}
+
+@InProceedings{Solenthaler2009,
+author = {Solenthaler, B. and Pajarola, R.},
+title = {Predictive-Corrective Incompressible SPH},
+year = {2009},
+isbn = {9781605587264},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+url = {https://doi.org/10.1145/1576246.1531346},
+doi = {10.1145/1576246.1531346},
+booktitle = {ACM SIGGRAPH 2009 Papers},
+articleno = {Article 40},
+numpages = {6},
+keywords = {SPH, fluid simulation, incompressibility},
+location = {New Orleans, Louisiana},
+series = {SIGGRAPH ’09}
+}
+
+@article{Monaghan2005,
+  author = {Monaghan J.},
+  year = {2005},
+  pages = {1703–1759},
+  title = {Smoothed particle hydrodynamics},
+  journal = {Reports on Progress in Physics},
+  number= {68}
+}
+
+@article{Courant1967,
+author = {Courant, R. and Friedrichs, K. and Lewy, H.},
+title = {On the Partial Difference Equations of Mathematical Physics},
+year = {1967},
+issue_date = {March 1967},
+publisher = {IBM Corp.},
+address = {USA},
+volume = {11},
+number = {2},
+issn = {0018-8646},
+url = {https://doi.org/10.1147/rd.112.0215},
+doi = {10.1147/rd.112.0215},
+journal = {IBM J. Res. Dev.},
+month = mar,
+pages = {215–234},
+numpages = {20}
+}
+
+@article{Temam1968,
+     author = {Temam, Roger},
+     title = {Une m\'ethode d'approximation de la solution des \'equations de Navier-Stokes},
+     journal = {Bulletin de la Soci\'et\'e Math\'ematique de France},
+     publisher = {Soci\'et\'e math\'ematique de France},
+     volume = {96},
+     year = {1968},
+     pages = {115-152},
+     doi = {10.24033/bsmf.1662},
+     zbl = {0181.18903},
+     mrnumber = {38},
+     language = {fr},
+     url = {http://www.numdam.org/item/BSMF_1968__96__115_0}
+}
+
+@article{Chorin1968,
+     author = {Chorin A.J.},
+     title = {Numerical Solution of the Navier-Stokes Equations},
+     journal = {Mathematics of Computation},
+     volume = {96},
+     year = {1968},
+     pages = {745-762},
+     mrnumber = {22},
+}
+
 % from urlbst package
 % Example from Jason Eisner, by mail (nothing special about the entry,
 % but he seemed to be having formatting problems with unsrturl and proceedings
