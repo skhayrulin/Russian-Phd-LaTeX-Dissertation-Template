@@ -260,51 +260,63 @@ F_{i}^{p}(t)=-m_i \sum_{j} m_j \left ( \frac{p_i(t)}{(\rho_{i}^{*})^2} + \frac{p
 \]
 Эта процедура повторяется пока \( max( \rho_{err_{i}}^{*} ) \) будет не больше определенного пользователем порогового значения (обычно 1\% - 3\% от характерной величины , для воды 1000 кг/м\textsuperscript{2}). Предлагается, проделывать не более трех итераций, чтобы ограничить колебание давления.
 
-Стоит также отметить, что при смещении частиц во временные позиции список соседей, вообще говоря, может измениться. Но для повышения производительности алгоритма предполагается использовать старое множество соседей (что почти всегда выполняется; даже если есть несоответствия, то, как правило, на границе расстояния сглаживания, что дает минимальный вклад в общую величину) и только пересчитывать расстояния. Это приближение приводит к небольшим ошибкам в оценках плотности и давления, которыми можно пренебречь \cite{Solenthaler2009}.
+Стоит также отметить, что при смещении частиц во временные позиции список соседей, вообще говоря, может измениться. Но для повышения производительности алгоритма предполагается использовать старое множество соседей (что почти всегда выполняется; даже если есть несоответствия, то, как правило, на границе расстояния сглаживания, что дает минимальный вклад в общую величину) и только пересчитывать расстояния. Это приближение приводит к небольшим ошибкам в оценках плотности и давления, которыми можно пренебречь \cite{Solenthaler2009}. Схема алгоритма PCI SPH продемонстрирована ниже схема \ref{algo:pcisph}
+\begin{algorithm}
+\label{algo:pcisph}
+\SetAlgoLined
+\SetKwFunction{Union}{Union}\SetKwFunction{FindNeighbour}{FindNeighbour}\SetKwFunction{ComputeForce}{ComputeForce}\SetKwFunction{PredictVelocity}{PredictVelocity}\SetKwFunction{PredictPosition}{PredictPosition}\SetKwFunction{PredictDensity}{PredictDensity}\SetKwFunction{PredictDensityVariation}{PredictDensityVariation}\SetKwFunction{ComputeVelocity}{ComputeVelocity}\SetKwFunction{ComputePosition}{ComputePosition}
+\SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+\Input{$\mathcal P$ array of particles}
 
+\ForEach{$p \in \mathcal P$}
+{
+${N_{p}} \leftarrow$ \FindNeighbour{$p, \mathcal P $}\;
+}
+\ForEach{$ p \in \mathcal P $}{
+$F^{v,g,ext}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
+$p(t) \leftarrow 0.0$\;
+$F^{p}(t) \leftarrow 0.0$\;
+ }
+ \While{$\rho_{err}^{*}(t+1)>\eta || (iter < minIterations)$}{
+ \ForEach{$p \in \mathcal P$}{
+    ${v_{p}^{*}(t+1)} \leftarrow$ \PredictVelocity{$p$}\;
+    ${x_{p}^{*}(t+1)} \leftarrow$ \PredictPosition{$p$}\;
+ }
+ \ForEach{$p \in \mathcal P$}{
+    $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensity{$\mathcal{P}$}\;
+    $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensityVariation{$\mathcal{P}$}\;
+    $p_{p}(t) += f(\rho_{err}^{*}(t+1))$\;
+ }
+ \ForEach{$p \in \mathcal P$}{
+    $F^{p}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
+ }
+ }
+ \ForEach{$p \in \mathcal P$}{
+    ${v_{p}(t+1)} \leftarrow$ \ComputeVelocity{$p$}\;
+    ${x_{p}(t+1)} \leftarrow$ \ComputePosition{$p$}\;
+ }
+\caption{Схема алгоритма PCI SPH}
+\end{algorithm}
 
+\subsection{Неподвижные объекты и границы}\label{subsec:ch1/sec4/sub2}
 
-Вот так может выглядеть формула, которую необходимо вставить в~строку
-по~тексту: \(x \approx \sin x\) при \(x \to 0\).
+Для обработки взаимодействия частиц с границей было предложено несколько методов, зачастую использующихся в различных реализациях PCI SPH:
 
-А вот так выглядит ненумерованная  формула c подстрочными
-и надстрочными индексами:
-\[
-(x_1+x_2)^2 = x_1^2 + 2 x_1 x_2 + x_2^2
-\]
+\begin{itemize}
+\item основанный на использование корректирующих сил \cite {Müller2004}
+\item основанный на корректировки сил и позиций \cite {Becker2009}
+\end{itemize}
 
-Формула с неопределенным интегралом:
-\[
-\int f(\alpha+x)=\sum\beta
-\]
+Основным недостатком вышеуказанных методов является сложность обработки взаимодействия частиц с границей сложной геометрии. Одним из возможных решений данной проблемы является метод, предложенный в работе  \cite {Ihmsen2010}, основной особенностью данного подхода является использование граничных частиц. Подобная техника позволяет корректно обрабатывать контакт с границей, а кроме того, дает возможность создавать границы разных форм, не опасаясь залипания частиц. Граница представляется в виде набора граничных частиц, расположенных в узлах решетки с заданным шагом; для каждой такой частицы используются те же характеристики, что и для обычных частиц, но, в отличие от них, граничные частицы неподвижны рисунок \ref{fig:boundary}
+\begin{figure}[ht]
+  \centerfloat{
+    \includegraphics[scale=0.30]{boundary}
+  }
+  \caption{Взаимодействие граничных частиц с частицей жидкости, залетевшей в один из углов ограничивающего объема. Красной стрелкой показано направление и величина скорости v(t+dt), черными стрелками показаны нормали, исходящие из граничных частиц, представленные серыми сферами. Оранжевой стрелкой и прозрачной сферой обозначено направление скорости и положение частицы жидкости \(v^{*}(t+dt)\) и \(x^{*}(t+dt)\) после взаимодействия с границей.}
+\label{fig:boundary}
+\end{figure}
 
-При использовании дробей формулы могут получаться очень высокие:
-\[
-  \frac{1}{\sqrt{2}+
-  \displaystyle\frac{1}{\sqrt{2}+
-  \displaystyle\frac{1}{\sqrt{2}+\cdots}}}
-\]
-
-В формулах можно использовать греческие буквы:
-%Все \original... команды заранее, ради этого примера, определены в Dissertation\userstyles.tex
-\[
-\alpha\beta\gamma\delta\originalepsilon\epsilon\zeta\eta\theta%
-\vartheta\iota\kappa\varkappa\lambda\mu\nu\xi\pi\varpi\rho\varrho%
-\sigma\varsigma\tau\upsilon\originalphi\phi\chi\psi\omega\Gamma\Delta%
-\Theta\Lambda\Xi\Pi\Sigma\Upsilon\Phi\Psi\Omega
-\]
-\[%https://texfaq.org/FAQ-boldgreek
-\boldsymbol{\alpha\beta\gamma\delta\originalepsilon\epsilon\zeta\eta%
-\theta\vartheta\iota\kappa\varkappa\lambda\mu\nu\xi\pi\varpi\rho%
-\varrho\sigma\varsigma\tau\upsilon\originalphi\phi\chi\psi\omega\Gamma%
-\Delta\Theta\Lambda\Xi\Pi\Sigma\Upsilon\Phi\Psi\Omega}
-\]
-
-Для добавления формул можно использовать пары \verb+$+\dots\verb+$+ и \verb+$$+\dots\verb+$$+,
-но~они считаются устаревшими.
-Лучше использовать их функциональные аналоги \verb+\(+\dots\verb+\)+ и \verb+\[+\dots\verb+\]+.
-
-\subsection{Ненумерованные многострочные формулы}\label{subsec:ch1/sec3/sub2}
+Взаимодействие между частицами и граничными частицами обрабатывается следующим образом, для каждой частицы, которая имеет в списке соседей граничные частицы, считаются граничные силы \(F^{boundary}\), которые влияют на распределение плотности жидкости. Отметим, однако, что частица попадает в поле действия граничных сил, только в том случае если 
 
 Вот так можно написать две формулы, не нумеруя их, чтобы знаки <<равно>> были
 строго друг под другом:
