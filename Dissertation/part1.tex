@@ -260,43 +260,44 @@ ISPH использует метод проекций, введенный в р�
 \]
 Эта процедура повторяется пока \( max( \rho_{err_{i}}^{*} ) \) будет не больше определенного пользователем порогового значения (обычно 1\% - 3\% от характерной величины , для воды 1000 кг/м\textsuperscript{2}). Предлагается, проделывать не более трех итераций, чтобы ограничить колебание давления.
 
-Стоит также отметить, что при смещении частиц во временные позиции список соседей, вообще говоря, может измениться. Но для повышения производительности алгоритма предполагается использовать старое множество соседей (что почти всегда выполняется; даже если есть несоответствия, то, как правило, на границе расстояния сглаживания, что дает минимальный вклад в общую величину) и только пересчитывать расстояния. Это приближение приводит к небольшим ошибкам в оценках плотности и давления, которыми можно пренебречь \cite{Solenthaler2009}. Схема алгоритма PCI SPH продемонстрирована ниже схема \ref{algo:pcisph}
-\begin{algorithm}
-  \label{algo:pcisph}
-  \SetAlgoLined
-  \SetKwFunction{Union}{Union}\SetKwFunction{FindNeighbour}{FindNeighbour}\SetKwFunction{ComputeForce}{ComputeForce}\SetKwFunction{PredictVelocity}{PredictVelocity}\SetKwFunction{PredictPosition}{PredictPosition}\SetKwFunction{PredictDensity}{PredictDensity}\SetKwFunction{PredictDensityVariation}{PredictDensityVariation}\SetKwFunction{ComputeVelocity}{ComputeVelocity}\SetKwFunction{ComputePosition}{ComputePosition}
-  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-  \Input{$\mathcal P$ array of particles}
+Стоит также отметить, что при смещении частиц во временные позиции список соседей, вообще говоря, может измениться. Но для повышения производительности алгоритма предполагается использовать старое множество соседей (что почти всегда выполняется; даже если есть несоответствия, то, как правило, на границе расстояния сглаживания, что дает минимальный вклад в общую величину) и только пересчитывать расстояния. Это приближение приводит к небольшим ошибкам в оценках плотности и давления, которыми можно пренебречь \cite{Solenthaler2009}. Схема алгоритма PCI SPH продемонстрирована ниже схема
+%\ref{algo:pcisph}
+% \begin{algorithm}
+%   \label{algo:pcisph}
+%   \SetAlgoLined
+%   \SetKwFunction{Union}{Union}\SetKwFunction{FindNeighbour}{FindNeighbour}\SetKwFunction{ComputeForce}{ComputeForce}\SetKwFunction{PredictVelocity}{PredictVelocity}\SetKwFunction{PredictPosition}{PredictPosition}\SetKwFunction{PredictDensity}{PredictDensity}\SetKwFunction{PredictDensityVariation}{PredictDensityVariation}\SetKwFunction{ComputeVelocity}{ComputeVelocity}\SetKwFunction{ComputePosition}{ComputePosition}
+%   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+%   \Input{$\mathcal P$ array of particles}
 
-  \ForEach{$p \in \mathcal P$}
-  {
-    ${N_{p}} \leftarrow$ \FindNeighbour{$p, \mathcal P $}\;
-  }
-  \ForEach{$ p \in \mathcal P $}{
-    $F^{v,g,ext}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
-    $p(t) \leftarrow 0.0$\;
-    $F^{p}(t) \leftarrow 0.0$\;
-  }
-  \While{$\rho_{err}^{*}(t+1)>\eta || (iter < minIterations)$}{
-    \ForEach{$p \in \mathcal P$}{
-      ${v_{p}^{*}(t+1)} \leftarrow$ \PredictVelocity{$p$}\;
-      ${x_{p}^{*}(t+1)} \leftarrow$ \PredictPosition{$p$}\;
-    }
-    \ForEach{$p \in \mathcal P$}{
-      $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensity{$\mathcal{P}$}\;
-      $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensityVariation{$\mathcal{P}$}\;
-      $p_{p}(t) += f(\rho_{err}^{*}(t+1))$\;
-    }
-    \ForEach{$p \in \mathcal P$}{
-      $F^{p}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
-    }
-  }
-  \ForEach{$p \in \mathcal P$}{
-    ${v_{p}(t+1)} \leftarrow$ \ComputeVelocity{$p$}\;
-    ${x_{p}(t+1)} \leftarrow$ \ComputePosition{$p$}\;
-  }
-  \caption{Схема алгоритма PCI SPH}
-\end{algorithm}
+%   \ForEach{$p \in \mathcal P$}
+%   {
+%     ${N_{p}} \leftarrow$ \FindNeighbour{$p, \mathcal P $}\;
+%   }
+%   \ForEach{$ p \in \mathcal P $}{
+%     $F^{v,g,ext}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
+%     $p(t) \leftarrow 0.0$\;
+%     $F^{p}(t) \leftarrow 0.0$\;
+%   }
+%   \While{$\rho_{err}^{*}(t+1)>\eta || (iter < minIterations)$}{
+%     \ForEach{$p \in \mathcal P$}{
+%       ${v_{p}^{*}(t+1)} \leftarrow$ \PredictVelocity{$p$}\;
+%       ${x_{p}^{*}(t+1)} \leftarrow$ \PredictPosition{$p$}\;
+%     }
+%     \ForEach{$p \in \mathcal P$}{
+%       $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensity{$\mathcal{P}$}\;
+%       $\rho_{err}^{*}(t+1) \leftarrow$ \PredictDensityVariation{$\mathcal{P}$}\;
+%       $p_{p}(t) += f(\rho_{err}^{*}(t+1))$\;
+%     }
+%     \ForEach{$p \in \mathcal P$}{
+%       $F^{p}(t) \leftarrow$ \ComputeForce{$p, \mathcal P $}\;
+%     }
+%   }
+%   \ForEach{$p \in \mathcal P$}{
+%     ${v_{p}(t+1)} \leftarrow$ \ComputeVelocity{$p$}\;
+%     ${x_{p}(t+1)} \leftarrow$ \ComputePosition{$p$}\;
+%   }
+%   \caption{Схема алгоритма PCI SPH}
+% \end{algorithm}
 
 \subsection{Неподвижные объекты и границы}\label{subsec:ch1/sec4/sub2}
 
