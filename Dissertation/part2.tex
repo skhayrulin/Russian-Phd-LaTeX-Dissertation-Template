@@ -52,7 +52,7 @@
         Перебор                      & Простота реализации                   & {\makecell { Aсимптотическая сложность \\ \( O(n^2)\) }} \\ \hline
         KD-дерево                    & {\makecell {Быстро и эффективно можно                                          \\
         находить ближайших соседей}} & {\makecell {Необходимо перестраивать                                           \\ дерево на каждой итерации \\
-              (система динамична)}}                                                                                   \\ \hline
+        (система динамична)}}                                                                                         \\ \hline
         Хеш функция                  & {\makecell {Быстро и эффективно                                                \\ можно находить \\ ближайших соседей }} & {\makecell {Сортировка массива \\ частиц на \\ каждой итерации }} \\ \hline
       \end{tabular}%
     \end{SingleSpace}
@@ -106,56 +106,56 @@
   \caption{Иллюстрация принципа выбора минимального радиуса. Гистограмма распределения расстояний от данной частицы \(i\) до соседних частиц. На данном примере достаточное количество соседних частиц, а именно 32, находится внутри сферы радиусом.}
   \label{fig:ns_5}
 \end{figure}
-Ниже приведена схема алгоритма
-% \ref{algorithm:ns}. 
-% \begin{algorithm}
-% \label{algorithm:ns}
-% \SetAlgoLined
-% \SetKwFunction{Neighbour}{Neighbour}
-% \SetKwFunction{PutNeighbour}{PutNeighbour}
-% \SetKwFunction{Dist}{Dist}
-% \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
-% \Input{$\mathcal P$ множество всех частиц}
-% \Input{$\mathcal N_{map}$ список списков всех соседей для каждой частицы}
-% \Input{$\mathcal C$ список из восьми смежных и домашней пространственных ячеек }
-% \ForEach{$p \in \mathcal P$}
-% {
-%     $r_s  \leftarrow 30 $\;
-%     $array[1...r_s]\, r_d = [0...0]$\;
-%     $mode = 0$\;
-%     $h_{min} = h$\;
-%     \textbf{search}: \\
-%     \ForEach{$c \in \mathcal C$}
-%     {
-%         \ForEach{$p_{n} \in \mathcal P_c = \left \{ \mathcal P_c \subseteq \mathcal P| \forall p_{i}\in \mathcal P_{c} \Rightarrow p_{i}.cellID = c \right \} $}
-%         {
-%             d = \Dist($p$,$p_{n}$)\;
-%             \If{$d \leq h_{min}$}{
-%                 \eIf{$mode == 0$} {
-%                     $r_{j} \leftarrow \left [ d \cdot \frac{r_{s}}{h} \right ] $\;
-%                     $r_{d}[r_{j}] \leftarrow r_{d}[r_{j}] + 1$\;
-%                 }
-%                 {
-%                     $neighbour \leftarrow Neighbour(p_{i}, d)$ \;
-%                     \PutNeighbour{$\mathcal N_{map}$[p], $neighbour$}\;
-%                 }
-%             }
-%         }
-%         $mode \leftarrow mode + 1$\;
-%         \If{$mode == 1$}{
-%             $n_{c} \leftarrow 0$\;
-%             \ForEach{$j \in [1...r_{s}]$}{
-%                 $n_{c} \leftarrow n_c + r_{d}[j]$\;
-%                 \If{$n_c > 32$}{
-%                     $h_{min} \leftarrow (j-1)\cdot \frac{h}{r_s}$ \;
-%                     \textbf{goto search}\;
-%                 }
-%             }
-%         }
-%     }
-% }
-% \caption{Схема алгоритма поиска соседей}
-% \end{algorithm}
+Ниже приведена схема алгоритма ~\ref{algo:ns}.
+
+\begin{algorithm}[H]
+  \label{algo:ns}
+  \SetAlgoLined
+  \SetKwFunction{Neighbour}{Neighbour}
+  \SetKwFunction{PutNeighbour}{PutNeighbour}
+  \SetKwFunction{Dist}{Dist}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \Input{$\mathcal P$ множество частиц}
+  \Input{$\mathcal N_{map}$ список списков всех соседей для каждой частицы}
+  \Input{$\mathcal C$ список пространственных ячеек }
+  \ForEach{$p \in \mathcal P$}
+  {
+    $r_s  \leftarrow 30 $\;
+    $array[1...r_s]\, r_d = [0...0]$\;
+    $searchMode = false$\;
+    $h_{min} = h$\;
+    \textbf{search}: \\
+    \ForEach{$c \in \mathcal C$}
+    {
+      \ForEach{$p_{n} \in \mathcal P_c = \left \{ \mathcal P_c \subseteq \mathcal P| \forall p_{i}\in \mathcal P_{c} \Rightarrow p_{i}.cellID = c \right \} $}
+      {
+        d = \Dist($p$,$p_{n}$)\;
+        \If{$d \leq h_{min}$}{
+          \eIf{$searchMode \neq true$} {
+            $r_{j} \leftarrow \left [ d \cdot \frac{r_{s}}{h} \right ] $\;
+            $r_{d}[r_{j}] \leftarrow r_{d}[r_{j}] + 1$\;
+          }
+          {
+            $neighbour \leftarrow Neighbour(p_{i}, d)$ \;
+            \PutNeighbour{$\mathcal N_{map}$[p], $neighbour$}\;
+          }
+        }
+      }
+      $searchMode \leftarrow true$\;
+      \If{$searchMode == true$}{
+        $n_{c} \leftarrow 0$\;
+        \ForEach{$j \in [1...r_{s}]$}{
+          $n_{c} \leftarrow n_c + r_{d}[j]$\;
+          \If{$n_c > 32$}{
+            $h_{min} \leftarrow (j-1)\cdot \frac{h}{r_s}$ \;
+            \textbf{goto search}\;
+          }
+        }
+      }
+    }
+  }
+  \caption{Схема алгоритма поиска соседей}
+\end{algorithm}
 
 
 \section{Алгоритм распределения зависимых данных по разным вычислительным устройствам}\label{sec:ch2/sec3}

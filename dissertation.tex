@@ -1,9 +1,8 @@
-\DeclareUnicodeCharacter{2212}{-}
+%\DeclareUnicodeCharacter{2212}{-}
 %&preformat-disser
-\RequirePackage[l2tabu,orthodox]{nag} % Раскомментировав, можно в логе получать рекомендации относительно правильного использования пакетов и предупреждения об устаревших и нерекомендуемых пакетах
+%\RequirePackage[l2tabu,orthodox]{nag} % Раскомментировав, можно в логе получать рекомендации относительно правильного использования пакетов и предупреждения об устаревших и нерекомендуемых пакетах
 % Формат А4, 14pt (ГОСТ Р 7.0.11-2011, 5.3.6)
 \documentclass[a4paper,14pt,oneside,openany]{memoir}
-\usepackage[linesnumbered,ruled]{algorithm2e}
 
 \input{common/setup}            % общие настройки шаблона
 \input{common/packages}         % Пакеты общие для диссертации и автореферата
@@ -20,7 +19,11 @@
 \input{common/styles}           % Стили общие для диссертации и автореферата
 \input{Dissertation/disstyles}  % Стили для диссертации
 \input{Dissertation/userstyles} % Стили для специфических пользовательских задач
-
+% \usepackage{algorithm}
+% \usepackage{algpseudocode}
+\usepackage{algorithm2e}
+\usepackage{float}
+\SetAlgorithmName{Алгоритм}{алгоритм}{Список алгоритмов}
 %%% Библиография. Выбор движка для реализации %%%
 % Здесь только проверка установленного ключа. Сама настройка выбора движка
 % размещена в common/setup.tex
@@ -50,7 +53,7 @@
 %\includeonly{Dissertation/contents,Dissertation/appendix,Dissertation/conclusion}
 %
 % Если все команды закомментированы, то документ будет выведен в PDF файл полностью
-
+\DeclareUnicodeCharacter{2212}{-}
 \begin{document}
 
 \input{common/renames}                 % Переопределение именований
@@ -68,7 +71,7 @@
 \include{Dissertation/part1}           % Глава 1
 \include{Dissertation/part2}           % Глава 2
 \include{Dissertation/part3}           % Глава 3
-%\include{Dissertation/part4}           % Глава 3
+\include{Dissertation/part4}           % Глава 3
 \include{Dissertation/conclusion}      % Заключение
 %\include{Dissertation/acronyms}        % Список сокращений и условных обозначений
 %\include{Dissertation/dictionary}      % Словарь терминов
