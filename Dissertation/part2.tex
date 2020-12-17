@@ -90,7 +90,7 @@
 На третьей стадии алгоритма, при непосредственном поиске соседей, для каждой частицы среди потенциальных соседних частиц (частиц которые находятся не дальше чем \(h\)) необходимо отобрать не более 32 ближайших. Поиск потенциальных соседей в первую очередь проходит в «домашней» ячейке (ячейка, в которой на данный момент находится частица), затем вычисляется положение частицы в ячейке, для этого ячейка разбивается на 8 равных пространственных фрагментов с длиной грани равной радиусу сглаживания рисунок ~\ref{fig:ns_4}.
 \begin{figure}[ht]
   \centerfloat{
-    \includegraphics[scale=0.30]{ns_4}
+    \includegraphics[scale=0.20]{ns_4}
   }
   \caption{Разбиение ячейки на 8 равных фрагментов.}
   \label{fig:ns_4}
@@ -101,18 +101,19 @@
 Формально можно представить список соседей как множество индексов частиц \(N_{i,h}=\left \{ j|\left | r_i-r_j \right | \leqslant h \right \}\). Для того чтобы отобрать наиболее близкие частицы, сначала необходимо выяснить на каком минимальном расстоянии \(h_min \leq  h\) находится удовлетворяющее нас количество ближайших частиц \(N_{i,h_{min}}=\left \{ j|\left | r_i-r_j \right | \leqslant h \right\} \subseteq N_{i,h}\). Для этого анализируется множество \(Nd_i=\left \{ k_{i,j}|k_{i,j}=\left | N_{i,\frac{h\cdot j}{s}} \right | - \left | N_{i,\frac{h\cdot (j-1)}{s}} \right |, j\in [1,...,s] \right \}\), где \(s=30\), и для частицы \(i\) получает \(h_{min}=\frac{(j+1)\cdot h}{s} |  j = \max_{1\leq c\leq s}\left ( c|\sum_{l=1}^{c} k_{i,l} \right )\leq NeighbourCount, k_{i,l} \in Nd_j\) \(NeighbourCount=32\) ~\ref{fig:ns_5}.
 \begin{figure}[ht]
   \centerfloat{
-    \includegraphics[scale=0.30]{ns_5}
+    \includegraphics[scale=0.20]{ns_5}
   }
   \caption{Иллюстрация принципа выбора минимального радиуса. Гистограмма распределения расстояний от данной частицы \(i\) до соседних частиц. На данном примере достаточное количество соседних частиц, а именно 32, находится внутри сферы радиусом.}
   \label{fig:ns_5}
 \end{figure}
-Ниже приведена схема алгоритма ~\ref{algo:ns}.
+Ниже приведена схема алгоритма поиска соседей ~\ref{algo:ns}.
 
 \begin{algorithm}[H]
   \label{algo:ns}
   \SetAlgoLined
   \SetKwFunction{Neighbour}{Neighbour}
   \SetKwFunction{PutNeighbour}{PutNeighbour}
+  \SetKwFunction{SearchParticlesForCell}{PutNeighbour}
   \SetKwFunction{Dist}{Dist}
   \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
   \Input{$\mathcal P$ множество частиц}
@@ -121,26 +122,14 @@
   \ForEach{$p \in \mathcal P$}
   {
     $r_s  \leftarrow 30 $\;
-    $array[1...r_s]\, r_d = [0...0]$\;
-    $searchMode = false$\;
-    $h_{min} = h$\;
+    $array[1...r_s]\, r_d \leftarrow [0...0]$\;
+    $searchMode \leftarrow false$\;
+    $h_{min} \leftarrow h$\;
     \textbf{search}: \\
     \ForEach{$c \in \mathcal C$}
     {
-      \ForEach{$p_{n} \in \mathcal P_c = \left \{ \mathcal P_c \subseteq \mathcal P| \forall p_{i}\in \mathcal P_{c} \Rightarrow p_{i}.cellID = c \right \} $}
-      {
-        d = \Dist($p$,$p_{n}$)\;
-        \If{$d \leq h_{min}$}{
-          \eIf{$searchMode \neq true$} {
-            $r_{j} \leftarrow \left [ d \cdot \frac{r_{s}}{h} \right ] $\;
-            $r_{d}[r_{j}] \leftarrow r_{d}[r_{j}] + 1$\;
-          }
-          {
-            $neighbour \leftarrow Neighbour(p_{i}, d)$ \;
-            \PutNeighbour{$\mathcal N_{map}$[p], $neighbour$}\;
-          }
-        }
-      }
+      $P_c \leftarrow \left \{ \mathcal P_c \subseteq \mathcal P| \forall p_{i}\in \mathcal P_{c} \Rightarrow p_{i}.cellID = c \right \} $\;
+      \SearchParticlesForCell{$\mathcal N_{map}$[p], $h_min$, $searchMode$}\;
       $searchMode \leftarrow true$\;
       \If{$searchMode == true$}{
         $n_{c} \leftarrow 0$\;
@@ -157,9 +146,42 @@
   \caption{Схема алгоритма поиска соседей}
 \end{algorithm}
 
+Процедура поиска множетва частиц в пространственной ячейке \(c\) описана в схеме ~\ref{algo:ns_c}.
+
+\begin{algorithm}[H]
+  \label{algo:ns_c}
+  \SetAlgoLined
+  \SetKwFunction{Neighbour}{Neighbour}
+  \SetKwFunction{PutNeighbour}{PutNeighbour}
+  \SetKwFunction{Dist}{Dist}
+  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+  \Input{$\mathcal P_c$ множество частиц для ячейки c}
+  \Input{$\mathcal N_{map}$ список списков всех соседей для каждой частицы}
+  \Input{$h_{min}$ радиус}
+  \Input{$ searchMode$ режим поиска/заполенния}
+  $r_s  \leftarrow 30 $\;
+  $h_{min} = h$\;
+  \ForEach{$p_{n} \in \mathcal P_c = \left \{ \mathcal P_c \subseteq \mathcal P| \forall p_{i}\in \mathcal P_{c} \Rightarrow p_{i}.cellID = c \right \} $}
+  {
+    d = \Dist($p$,$p_{n}$)\;
+    \If{$d \leq h_{min}$}{
+      \eIf{$searchMode \neq true$} {
+        $r_{j} \leftarrow \left [ d \cdot \frac{r_{s}}{h} \right ] $\;
+        $r_{d}[r_{j}] \leftarrow r_{d}[r_{j}] + 1$\;
+      }
+      {
+        $neighbour \leftarrow Neighbour(p_{i}, d)$ \;
+        \PutNeighbour{$\mathcal N_{map}$[p], $neighbour$}\;
+      }
+    }
+  }
+  \caption{Схема алгоритма поиска частиц в окресности для заданной ячейке.}
+\end{algorithm}
+
+Функция \( Dist \) - расчитавает растояние между частицами как растояние Евклида.
 
 \section{Алгоритм распределения зависимых данных по разным вычислительным устройствам}\label{sec:ch2/sec3}
-Основная идея алгоритма заключается в распределении данных между вычислительными устройствами(вычислитель), таким образом, чтобы обеспечить каждую частицу, обрабатываемую устройством, необходимым и достаточным, массивом данных, для расчета списка соседей и физических величин. При этом количество частиц, обрабатываемых одним устройством, должно зависеть от его вычислительных возможностей. Также в следствии того, что система не статична, алгоритм должен динамически перераспределять данные между устройствами, чтобы поддерживать оптимальное распределение и актуальность данных на каждом устройстве.
+Основная идея алгоритма заключается в распределении данных между вычислительными устройствами(вычислитель). Таким образом, чтобы обеспечить каждую частицу, обрабатываемую устройством, необходимым и достаточным, массивом данных, для расчета списка соседей и физических величин. При этом количество частиц, обрабатываемых одним устройством, должно зависеть от его вычислительных возможностей. Также в следствии того, что система не статична, алгоритм должен динамически перераспределять данные между устройствами, чтобы поддерживать оптимальное распределение и актуальность данных на каждом устройстве.
 
 Для каждая частицы в каждый момент времени известен \(cellID\)– или индекс пространственной ячейки, в которой она находиться  в момент времени t. Таким образом можно кластеризовать частицы как минимум по их \(cellID\). В то же время все моделируемое пространство можно разделять на группы пространственных ячеек. При этом вследствии  того, что нашей основной целью является распараллеливание моделирования жидкости методом PCI SPH, обоснованно предположить, что необходимо и достаточно разделять пространство по плоскости коллинеарной вектору гравитации рисунок ~\ref{fig:dstr_1}.
 \begin{figure}[ht]
@@ -197,7 +219,7 @@
 \fixme {На рисунке \ref{fig:dstr_3} показана схема выделения и использования памяти. Каждый экземпляр класса Solver управляет памятью на своем устройстве, при этом общий массив данных хранится оперативной памяти и управляется в хостовой части программы.}
 \begin{figure}[ht]
   \centerfloat{
-    \includegraphics[scale=0.30]{distrib3}
+    \includegraphics[scale=0.20]{distrib3}
   }
   \caption{Схема использования и выделения памяти.}
   \label{fig:dstr_3}
