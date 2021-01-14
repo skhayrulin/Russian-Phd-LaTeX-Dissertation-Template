@@ -166,20 +166,27 @@
   \caption{Этапы компиляции программы для OpenCL платформ.}\label{fig:ocl_compiller}
 \end{figure}
 
-На данный момент весь код, содержащий инструкции для среды выполнения кода OpenCL содержатся в 12 функциях ядрах:
+Таким образом подобное преобразование помогает абстрагировать OpenCL код от конретной платформы и устройства (CPU, GPU, FPGA) и делает его более гибким и переносимым. На данный момент весь код, содержащий инструкции для среды выполнения кода OpenCL содержатся в 11 функциях ядрах:
 \begin{itemize}
-  \item kernel\_init\_ext\_particles  - инициализация массива списка соседей для всех частиц.
-  \item kernel\_hash\_particles - расчет пространственного хеша для всех частиц
-  \item kernel\_clear\_grid\_hash - очистка массива хранящего границы...
-  \item kernel\_fill\_particle\_cell\_hash -
-  \item kernel\_neighbour\_search -
-  \item kernel\_fill\_particle\_cell\_hash -
-  \item kernel\_compute\_forces\_init\_pressure -
-  \item kernel\_predict\_positions -
-  \item kernel\_predict\_density -
-  \item kernel\_correct\_pressure -
-  \item kernel\_compute\_pressure\_force\_acceleration -
-  \item kernel\_integrate -
+  \item kernel\_init\_ext\_particles  - инициализация списков соседей.
+  \item kernel\_hash\_particles - расчет пространственного хеша.
+  \item kernel\_clear\_grid\_hash, kernel\_fill\_particle\_cell\_hash - процедуры предварительной подготовки дополнительных струкутр данных необходимых для поиска соседей.
+  \item kernel\_neighbour\_search - процедура поиска соседей для каждой частицы
+  \item kernel\_compute\_forces\_init\_pressure - инициализация векторов внешних сил \(F^{external}\) и давдения \(F^{pressure}\) нулем.
+  \item kernel\_predict\_positions - вычисление текущего расположения частиц с учетом текущих значений физических параметров.
+  \item kernel\_predict\_density - вычисление текущего значения плотности в зависимости от расположения частиц
+  \item kernel\_correct\_pressure - корректеровка давления.
+  \item kernel\_compute\_pressure\_force\_acceleration - прерасчет позиций частиц в соответсивие со скорентированным давлением.
+  \item kernel\_integrate - этап интеграции, расчет конечного положения частиц и их скоростей.
 \end{itemize}
 
-Для паралельной сортировки OpenCL код содержит ...
+Стоит отметить, что расчеты происходят параллельно и независимо для каждой частицы, которая попадает в подмножество обрабатывамое конкретным устройством.
+Для паралельной сортировки OpenCL код состоит из шести ядер:
+\begin{itemize}
+  \item kernel\_prepare - подготовка структур.
+  \item kernel\_count - постороение локального распределения.
+  \item kernel\_scan - ... \fixme{дописать}
+  \item kernel\_coalesce - ... \fixme{дописать}
+  \item kernel\_reorder - перестроенние списка индексов.
+  \item kernel\_shuffle - перераспределение множества частиц.
+\end{itemize}
